@@ -7,10 +7,9 @@
 //
 
 #import "ZZZRootViewController.h"
-
 #import "ZZZModelController.h"
-
 #import "ZZZDataViewController.h"
+#import "ZZZLocationViewController.h"
 
 @interface ZZZRootViewController ()
 @property (readonly, strong, nonatomic) ZZZModelController *modelController;
@@ -20,46 +19,90 @@
 
 @synthesize modelController = _modelController;
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    // Configure the page view controller and add it as a child view controller.
-    self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-    self.pageViewController.delegate = self;
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (self.modelController.needLocations) {
+        ZZZLocationViewController *location = [self.storyboard instantiateViewControllerWithIdentifier:@"locationSelection"];
+        ZZZLocationViewController __block *blah = location;
+        
+        location.callback = ^{
+            [self.modelController reloadLocationData];
+            [self loadPageViewController];
+            [blah dismissViewControllerAnimated:YES completion:nil];
+        };
+        
+        [self presentViewController:location animated:YES completion:nil];
+        
+    } else {
+        [self loadPageViewController];
+    }
+}
 
+- (void)loadPageViewController {
+    if (self.pageViewController) {
+        [self.modelController reloadLocationData];
+        
+        ZZZDataViewController *startingViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
+        NSArray *viewControllers = @[startingViewController];
+        
+        [self.pageViewController setViewControllers:viewControllers
+                                          direction:UIPageViewControllerNavigationDirectionForward
+                                           animated:NO
+                                         completion:nil];
+        return;
+    }
+    
+    self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    self.pageViewController.delegate = self;
+   
     ZZZDataViewController *startingViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
     NSArray *viewControllers = @[startingViewController];
     [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-
+    
     self.pageViewController.dataSource = self.modelController;
-
+    
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
-
-    // Set the page view controller's bounds using an inset rect so that self's view is visible around the edges of the pages.
-    CGRect pageViewRect = self.view.bounds;
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        pageViewRect = CGRectInset(pageViewRect, 40.0, 40.0);
-    }
-    self.pageViewController.view.frame = pageViewRect;
-
+    
     [self.pageViewController didMoveToParentViewController:self];
-
+    
     // Add the page view controller's gesture recognizers to the book view controller's view so that the gestures are started more easily.
     self.view.gestureRecognizers = self.pageViewController.gestureRecognizers;
+    
+    // Experimental stuff to grab the page view control :o
+    NSArray *subviews = self.pageViewController.view.subviews;
+    UIPageControl *thisControl = nil;
+    for (int i=0; i<[subviews count]; i++) {
+        if ([[subviews objectAtIndex:i] isKindOfClass:[UIPageControl class]]) {
+            thisControl = (UIPageControl *)[subviews objectAtIndex:i];
+        }
+    }
+    
+    thisControl.backgroundColor = [UIColor blueColor];
+    UIButton *moreButton = [[UIButton alloc] init];
+    [moreButton setTitle:@"+" forState:UIControlStateNormal];
+    
+    moreButton.frame = CGRectMake(0, 0, 50, 50);
+    moreButton.backgroundColor = [UIColor redColor];
+    [moreButton addTarget:self action:@selector(moreButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [thisControl addSubview:moreButton];
+    NSLog(@"The control! %@", thisControl);
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)moreButtonTap:(id)sender {
+    ZZZLocationViewController *location = [self.storyboard instantiateViewControllerWithIdentifier:@"locationSelection"];
+    ZZZLocationViewController __block *blah = location;
+    location.callback = ^{
+        [blah dismissViewControllerAnimated:YES completion:nil];
+        // viewDidAppear will call 'loadPageViewController again'
+    };
+    
+    [self presentViewController:location animated:YES completion:nil];
 }
 
-- (ZZZModelController *)modelController
-{
-     // Return the model controller object, creating it if necessary.
-     // In more complex implementations, the model controller may be passed to the view controller.
+- (ZZZModelController *)modelController {
     if (!_modelController) {
         _modelController = [[ZZZModelController alloc] init];
     }

@@ -24,6 +24,10 @@
 		927C2CAB19402862002D09DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927C2C8419402862002D09DF /* UIKit.framework */; };
 		927C2CB319402862002D09DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 927C2CB119402862002D09DF /* InfoPlist.strings */; };
 		927C2CB519402862002D09DF /* We8therTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 927C2CB419402862002D09DF /* We8therTests.m */; };
+		927C2CC019402883002D09DF /* ZZZNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 927C2CBF19402883002D09DF /* ZZZNetwork.m */; };
+		927C2CC319402D1A002D09DF /* ZZZLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927C2CC219402D1A002D09DF /* ZZZLocationViewController.m */; };
+		92FC80471941162B0041157C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92FC80461941162B0041157C /* CoreLocation.framework */; };
+		92FC804A19411EE90041157C /* ZZZLocationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC804919411EE90041157C /* ZZZLocationModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +65,13 @@
 		927C2CB019402862002D09DF /* We8therTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "We8therTests-Info.plist"; sourceTree = "<group>"; };
 		927C2CB219402862002D09DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		927C2CB419402862002D09DF /* We8therTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = We8therTests.m; sourceTree = "<group>"; };
+		927C2CBE19402883002D09DF /* ZZZNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZZNetwork.h; sourceTree = "<group>"; };
+		927C2CBF19402883002D09DF /* ZZZNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZZNetwork.m; sourceTree = "<group>"; };
+		927C2CC119402D1A002D09DF /* ZZZLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZZLocationViewController.h; sourceTree = "<group>"; };
+		927C2CC219402D1A002D09DF /* ZZZLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZZLocationViewController.m; sourceTree = "<group>"; };
+		92FC80461941162B0041157C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		92FC804819411EE90041157C /* ZZZLocationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZZLocationModel.h; sourceTree = "<group>"; };
+		92FC804919411EE90041157C /* ZZZLocationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZZLocationModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92FC80471941162B0041157C /* CoreLocation.framework in Frameworks */,
 				927C2C8319402862002D09DF /* CoreGraphics.framework in Frameworks */,
 				927C2C8519402862002D09DF /* UIKit.framework in Frameworks */,
 				927C2C8119402862002D09DF /* Foundation.framework in Frameworks */,
@@ -109,6 +121,7 @@
 		927C2C7F19402862002D09DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92FC80461941162B0041157C /* CoreLocation.framework */,
 				927C2C8019402862002D09DF /* Foundation.framework */,
 				927C2C8219402862002D09DF /* CoreGraphics.framework */,
 				927C2C8419402862002D09DF /* UIKit.framework */,
@@ -120,18 +133,21 @@
 		927C2C8619402862002D09DF /* We8ther */ = {
 			isa = PBXGroup;
 			children = (
+				927C2CA119402862002D09DF /* Images.xcassets */,
+				927C2C9E19402862002D09DF /* Main_iPad.storyboard */,
+				927C2C9B19402862002D09DF /* Main_iPhone.storyboard */,
+				927C2C8719402862002D09DF /* Supporting Files */,
 				927C2C8F19402862002D09DF /* ZZZAppDelegate.h */,
 				927C2C9019402862002D09DF /* ZZZAppDelegate.m */,
-				927C2C9219402862002D09DF /* ZZZRootViewController.h */,
-				927C2C9319402862002D09DF /* ZZZRootViewController.m */,
+				92FC804B194131C20041157C /* Location */,
 				927C2C9519402862002D09DF /* ZZZDataViewController.h */,
 				927C2C9619402862002D09DF /* ZZZDataViewController.m */,
 				927C2C9819402862002D09DF /* ZZZModelController.h */,
 				927C2C9919402862002D09DF /* ZZZModelController.m */,
-				927C2C9B19402862002D09DF /* Main_iPhone.storyboard */,
-				927C2C9E19402862002D09DF /* Main_iPad.storyboard */,
-				927C2CA119402862002D09DF /* Images.xcassets */,
-				927C2C8719402862002D09DF /* Supporting Files */,
+				927C2CBE19402883002D09DF /* ZZZNetwork.h */,
+				927C2CBF19402883002D09DF /* ZZZNetwork.m */,
+				927C2C9219402862002D09DF /* ZZZRootViewController.h */,
+				927C2C9319402862002D09DF /* ZZZRootViewController.m */,
 			);
 			path = We8ther;
 			sourceTree = "<group>";
@@ -163,6 +179,17 @@
 				927C2CB119402862002D09DF /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		92FC804B194131C20041157C /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				92FC804819411EE90041157C /* ZZZLocationModel.h */,
+				92FC804919411EE90041157C /* ZZZLocationModel.m */,
+				927C2CC119402D1A002D09DF /* ZZZLocationViewController.h */,
+				927C2CC219402D1A002D09DF /* ZZZLocationViewController.m */,
+			);
+			name = Location;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,6 +294,9 @@
 				927C2C9419402862002D09DF /* ZZZRootViewController.m in Sources */,
 				927C2C9719402862002D09DF /* ZZZDataViewController.m in Sources */,
 				927C2C8D19402862002D09DF /* main.m in Sources */,
+				927C2CC319402D1A002D09DF /* ZZZLocationViewController.m in Sources */,
+				927C2CC019402883002D09DF /* ZZZNetwork.m in Sources */,
+				92FC804A19411EE90041157C /* ZZZLocationModel.m in Sources */,
 				927C2C9119402862002D09DF /* ZZZAppDelegate.m in Sources */,
 				927C2C9A19402862002D09DF /* ZZZModelController.m in Sources */,
 			);
@@ -483,6 +513,7 @@
 				927C2CBA19402862002D09DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		927C2CBB19402862002D09DF /* Build configuration list for PBXNativeTarget "We8therTests" */ = {
 			isa = XCConfigurationList;
@@ -491,6 +522,7 @@
 				927C2CBD19402862002D09DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

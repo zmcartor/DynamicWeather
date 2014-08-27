@@ -7,12 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
 
 @class ZZZDataViewController;
 
 @interface ZZZModelController : NSObject <UIPageViewControllerDataSource>
 
+@property (assign, nonatomic) BOOL needLocations;
+- (void)reloadLocationData;
 - (ZZZDataViewController *)viewControllerAtIndex:(NSUInteger)index storyboard:(UIStoryboard *)storyboard;
 - (NSUInteger)indexOfViewController:(ZZZDataViewController *)viewController;
+
++ (void)savePlacemarkToStore:(CLPlacemark *)place;
 
 @end

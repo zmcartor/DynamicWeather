@@ -7,8 +7,9 @@
 //
 
 #import "ZZZModelController.h"
-
+#import "ZZZLocationModel.h"
 #import "ZZZDataViewController.h"
+#import <CoreLocation/CoreLocation.h>
 
 /*
  A controller object that manages a simple model -- a collection of month names.
@@ -20,24 +21,52 @@
  */
 
 @interface ZZZModelController()
-@property (readonly, strong, nonatomic) NSArray *pageData;
+@property (strong, nonatomic) NSArray *pageData;
 @end
 
 @implementation ZZZModelController
 
-- (id)init
-{
++ (void)savePlacemarkToStore:(CLPlacemark *)placemark {
+    // check if theres already saved data and append
+    ZZZLocationModel *model = [[ZZZLocationModel alloc] initWithPlacemark:placemark];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *storedArray = nil;
+    storedArray = [NSKeyedUnarchiver unarchiveObjectWithData:[defaults objectForKey:@"we8ther_locations"]];
+    
+    if (storedArray) {
+        [storedArray addObject:model];
+    }
+    else {
+        storedArray = [[NSMutableArray alloc] initWithObjects:model, nil];
+    }
+    
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:storedArray];
+    [defaults setObject:data forKey:@"we8ther_locations"];
+    [defaults synchronize];
+}
+
+- (id)init {
     self = [super init];
     if (self) {
-        // Create the data model.
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        _pageData = [[dateFormatter monthSymbols] copy];
+        [self reloadLocationData];
     }
     return self;
 }
 
-- (ZZZDataViewController *)viewControllerAtIndex:(NSUInteger)index storyboard:(UIStoryboard *)storyboard
-{   
+- (void)reloadLocationData {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    self.pageData = [NSKeyedUnarchiver unarchiveObjectWithData:[defaults objectForKey:@"we8ther_locations"]];
+    
+    if ([self.pageData count] == 0) {
+        self.needLocations = YES;
+    }
+    else {
+        self.needLocations = NO;
+    }
+}
+
+- (ZZZDataViewController *)viewControllerAtIndex:(NSUInteger)index storyboard:(UIStoryboard *)storyboard {
     // Return the data view controller for the given index.
     if (([self.pageData count] == 0) || (index >= [self.pageData count])) {
         return nil;
@@ -45,21 +74,24 @@
     
     // Create a new view controller and pass suitable data.
     ZZZDataViewController *dataViewController = [storyboard instantiateViewControllerWithIdentifier:@"ZZZDataViewController"];
-    dataViewController.dataObject = self.pageData[index];
+    dataViewController.locationModel = self.pageData[index];
     return dataViewController;
 }
 
-- (NSUInteger)indexOfViewController:(ZZZDataViewController *)viewController
-{   
-     // Return the index of the given data view controller.
-     // For simplicity, this implementation uses a static array of model objects and the view controller stores the model object; you can therefore use the model object to identify the index.
-    return [self.pageData indexOfObject:viewController.dataObject];
+- (NSUInteger)indexOfViewController:(ZZZDataViewController *)viewController {
+    return [self.pageData indexOfObject:viewController.locationModel];
 }
 
 #pragma mark - Page View Controller Data Source
+- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
+    return [self.pageData count];
+}
 
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
-{
+- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
+    return 0;
+}
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
     NSUInteger index = [self indexOfViewController:(ZZZDataViewController *)viewController];
     if ((index == 0) || (index == NSNotFound)) {
         return nil;
@@ -69,8 +101,7 @@
     return [self viewControllerAtIndex:index storyboard:viewController.storyboard];
 }
 
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
-{
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     NSUInteger index = [self indexOfViewController:(ZZZDataViewController *)viewController];
     if (index == NSNotFound) {
         return nil;
