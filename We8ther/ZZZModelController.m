@@ -8,7 +8,7 @@
 
 #import "ZZZModelController.h"
 #import "ZZZLocationModel.h"
-#import "ZZZDataViewController.h"
+#import "ZZZForecastViewController.h"
 #import <CoreLocation/CoreLocation.h>
 
 /*
@@ -66,19 +66,19 @@
     }
 }
 
-- (ZZZDataViewController *)viewControllerAtIndex:(NSUInteger)index storyboard:(UIStoryboard *)storyboard {
+- (ZZZForecastViewController *)viewControllerAtIndex:(NSUInteger)index storyboard:(UIStoryboard *)storyboard {
     // Return the data view controller for the given index.
     if (([self.pageData count] == 0) || (index >= [self.pageData count])) {
         return nil;
     }
     
     // Create a new view controller and pass suitable data.
-    ZZZDataViewController *dataViewController = [storyboard instantiateViewControllerWithIdentifier:@"ZZZDataViewController"];
+    ZZZForecastViewController *dataViewController = [storyboard instantiateViewControllerWithIdentifier:@"ZZZDataViewController"];
     dataViewController.locationModel = self.pageData[index];
     return dataViewController;
 }
 
-- (NSUInteger)indexOfViewController:(ZZZDataViewController *)viewController {
+- (NSUInteger)indexOfViewController:(ZZZForecastViewController *)viewController {
     return [self.pageData indexOfObject:viewController.locationModel];
 }
 
@@ -92,7 +92,7 @@
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    NSUInteger index = [self indexOfViewController:(ZZZDataViewController *)viewController];
+    NSUInteger index = [self indexOfViewController:(ZZZForecastViewController *)viewController];
     if ((index == 0) || (index == NSNotFound)) {
         return nil;
     }
@@ -102,7 +102,7 @@
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    NSUInteger index = [self indexOfViewController:(ZZZDataViewController *)viewController];
+    NSUInteger index = [self indexOfViewController:(ZZZForecastViewController *)viewController];
     if (index == NSNotFound) {
         return nil;
     }

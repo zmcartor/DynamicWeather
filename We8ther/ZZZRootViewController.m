@@ -8,7 +8,7 @@
 
 #import "ZZZRootViewController.h"
 #import "ZZZModelController.h"
-#import "ZZZDataViewController.h"
+#import "ZZZForecastViewController.h"
 #import "ZZZLocationViewController.h"
 
 @interface ZZZRootViewController ()
@@ -40,10 +40,12 @@
 }
 
 - (void)loadPageViewController {
+    
+    //TODO should be a better way to handle absense of data and subview management here.
     if (self.pageViewController) {
         [self.modelController reloadLocationData];
         
-        ZZZDataViewController *startingViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
+        ZZZForecastViewController *startingViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
         NSArray *viewControllers = @[startingViewController];
         
         [self.pageViewController setViewControllers:viewControllers
@@ -56,7 +58,7 @@
     self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageViewController.delegate = self;
    
-    ZZZDataViewController *startingViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
+    ZZZForecastViewController *startingViewController = [self.modelController viewControllerAtIndex:0 storyboard:self.storyboard];
     NSArray *viewControllers = @[startingViewController];
     [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
@@ -83,12 +85,12 @@
     UIButton *moreButton = [[UIButton alloc] init];
     [moreButton setTitle:@"+" forState:UIControlStateNormal];
     
+    //TODO use autolayout
     moreButton.frame = CGRectMake(0, 0, 50, 50);
     moreButton.backgroundColor = [UIColor redColor];
     [moreButton addTarget:self action:@selector(moreButtonTap:) forControlEvents:UIControlEventTouchUpInside];
     
     [thisControl addSubview:moreButton];
-    NSLog(@"The control! %@", thisControl);
 }
 
 - (IBAction)moreButtonTap:(id)sender {
@@ -96,7 +98,6 @@
     ZZZLocationViewController __block *blah = location;
     location.callback = ^{
         [blah dismissViewControllerAnimated:YES completion:nil];
-        // viewDidAppear will call 'loadPageViewController again'
     };
     
     [self presentViewController:location animated:YES completion:nil];
@@ -132,7 +133,7 @@
     }
 
     // In landscape orientation: Set set the spine location to "mid" and the page view controller's view controllers array to contain two view controllers. If the current page is even, set it to contain the current and next view controllers; if it is odd, set the array to contain the previous and current view controllers.
-    ZZZDataViewController *currentViewController = self.pageViewController.viewControllers[0];
+    ZZZForecastViewController *currentViewController = self.pageViewController.viewControllers[0];
     NSArray *viewControllers = nil;
 
     NSUInteger indexOfCurrentViewController = [self.modelController indexOfViewController:currentViewController];

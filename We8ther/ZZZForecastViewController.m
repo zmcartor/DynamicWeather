@@ -6,19 +6,19 @@
 //  Copyright (c) 2014 Compoucher. All rights reserved.
 //
 
-#import "ZZZDataViewController.h"
+#import "ZZZForecastViewController.h"
 #import "ZZZLocationModel.h"
 #import "ZZZLocationViewController.h"
 #import "ZZZNetwork.h"
 
-@interface ZZZDataViewController ()
+@interface ZZZForecastViewController ()
 
 @property (strong, nonatomic) ZZZNetwork *networkClient;
 @property (strong, nonatomic) NSDictionary *weather;
 
 @end
 
-@implementation ZZZDataViewController
+@implementation ZZZForecastViewController
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];

@@ -10,7 +10,7 @@
 
 @class ZZZLocationModel;
 
-@interface ZZZDataViewController : UIViewController
+@interface ZZZForecastViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UILabel *dataLabel;
 @property (weak, nonatomic) IBOutlet UILabel *cityStateLabel;
